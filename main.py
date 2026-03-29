@@ -1,56 +1,77 @@
-# Import OpenCV library (used to handle video and images)
+# Import OpenCV (used for video processing)
 import cv2
 
-# -------------------------------
-# 🔹 CHANGE 1 (IMPORTANT)
-# Put your correct video file name here
-# Make sure video is in SAME folder as this file
-# -------------------------------
+# -----------------------------------
+# 🔹 FULL MAIN CODE STARTS HERE
+# -----------------------------------
+
+# Path of your video file
+# IMPORTANT: Video must be in same folder as this file
 video_path = "sample.mp4"
 
 # Open the video file
 cap = cv2.VideoCapture(video_path)
 
 # Check if video opened successfully
-# If False → video problem (your current issue)
 if not cap.isOpened():
-    print("Error: Video not opened properly. Check file path or format.")
+    print("❌ Error: Video not opened properly.")
+    print("👉 Check file name, location, or format.")
     exit()
+
+# Print success message
+print("✅ Video opened successfully")
 
 # Counter for frames
 frame_count = 0
 
-# Loop to read video frame by frame
+# Loop to read frames one by one
 while True:
-    # Read one frame from video
+    # Read a frame
     ret, frame = cap.read()
 
-    # If frame not read → video ended or error
+    # If frame not read → end of video or error
     if not ret:
         break
 
     # Increase frame count
     frame_count += 1
 
-    # OPTIONAL: Show the frame (can remove if not needed)
+    # OPTIONAL: Show frames (you can remove this if not needed)
     # cv2.imshow("Frame", frame)
 
-    # Press 'q' to exit early
+    # Press 'q' to stop early
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Release video
+# Release the video resource
 cap.release()
 
-# Close all windows (if opened)
+# Close all OpenCV windows
 cv2.destroyAllWindows()
 
-# Print how many frames were extracted
-print("Frames extracted:", frame_count)
+# Print total frames extracted
+print("📊 Frames extracted:", frame_count)
 
-# -------------------------------
-# 🔹 CHANGE 2 (IMPORTANT DEBUG)
-# If frames = 0 → video is corrupted or not readable
-# -------------------------------
+# -----------------------------------
+# 🔹 DEBUGGING SECTION
+# -----------------------------------
+
+# If no frames are extracted, show clear message
 if frame_count == 0:
-    print("No frames found. Your video is likely corrupted or unsupported format.")
+    print("⚠️ No frames found!")
+    print("👉 Possible reasons:")
+    print("   - Video file is corrupted")
+    print("   - Unsupported format")
+    print("   - Wrong file path or name")
+    print("   - Video codec issue")
+
+# -----------------------------------
+# 🔹 OPTIONAL TEST (VERY IMPORTANT DEBUG)
+# -----------------------------------
+
+# Re-check video opening status
+cap_test = cv2.VideoCapture(video_path)
+
+print("🔍 Debug: Is video opened?", cap_test.isOpened())
+
+cap_test.release()
