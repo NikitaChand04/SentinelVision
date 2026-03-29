@@ -4,14 +4,21 @@ import numpy as np
 from data_loader import load_frames
 from model import build_model
 
-# Step 1: Extract frames
-video_path = "sample.mp4"
+# Step 1: Extract frames from video
+video_path = r"./sample.mp4"
+
 frame_folder = "frames"
 
 if not os.path.exists(frame_folder):
     os.makedirs(frame_folder)
 
 cap = cv2.VideoCapture(video_path)
+
+# IMPORTANT CHECK
+if not cap.isOpened():
+    print("Error: Video file not opened. Check file path.")
+    exit()
+
 count = 0
 
 while True:
@@ -36,7 +43,6 @@ model = build_model()
 # Step 4: Train model
 if len(data) > 0:
     model.fit(data, data, epochs=3, batch_size=8)
-
     model.save("anomaly_model.h5")
     print("Model trained and saved.")
 else:
