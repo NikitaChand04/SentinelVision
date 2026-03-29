@@ -1,49 +1,56 @@
+# Import OpenCV library (used to handle video and images)
 import cv2
-import os
-import numpy as np
-from data_loader import load_frames
-from model import build_model
 
-# Step 1: Extract frames from video
-video_path = r"./sample.mp4"
+# -------------------------------
+# 🔹 CHANGE 1 (IMPORTANT)
+# Put your correct video file name here
+# Make sure video is in SAME folder as this file
+# -------------------------------
+video_path = "sample.mp4"
 
-frame_folder = "frames"
-
-if not os.path.exists(frame_folder):
-    os.makedirs(frame_folder)
-
+# Open the video file
 cap = cv2.VideoCapture(video_path)
 
-# IMPORTANT CHECK
+# Check if video opened successfully
+# If False → video problem (your current issue)
 if not cap.isOpened():
-    print("Error: Video file not opened. Check file path.")
+    print("Error: Video not opened properly. Check file path or format.")
     exit()
 
-count = 0
+# Counter for frames
+frame_count = 0
 
+# Loop to read video frame by frame
 while True:
+    # Read one frame from video
     ret, frame = cap.read()
+
+    # If frame not read → video ended or error
     if not ret:
         break
 
-    frame = cv2.resize(frame, (128, 128))
-    cv2.imwrite(f"{frame_folder}/frame_{count}.jpg", frame)
-    count += 1
+    # Increase frame count
+    frame_count += 1
 
+    # OPTIONAL: Show the frame (can remove if not needed)
+    # cv2.imshow("Frame", frame)
+
+    # Press 'q' to exit early
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release video
 cap.release()
 
-print("Frames extracted:", count)
+# Close all windows (if opened)
+cv2.destroyAllWindows()
 
-# Step 2: Load frames
-data = load_frames(frame_folder)
+# Print how many frames were extracted
+print("Frames extracted:", frame_count)
 
-# Step 3: Build model
-model = build_model()
-
-# Step 4: Train model
-if len(data) > 0:
-    model.fit(data, data, epochs=3, batch_size=8)
-    model.save("anomaly_model.h5")
-    print("Model trained and saved.")
-else:
-    print("No data found.")
+# -------------------------------
+# 🔹 CHANGE 2 (IMPORTANT DEBUG)
+# If frames = 0 → video is corrupted or not readable
+# -------------------------------
+if frame_count == 0:
+    print("No frames found. Your video is likely corrupted or unsupported format.")
