@@ -18,7 +18,7 @@ def build_model():
 
     decoded = Conv2D(3, (3,3), activation='sigmoid', padding='same')(x)
 
-    autoencoder = Model(input_img, decoded)
-    autoencoder.compile(optimizer='adam', loss='mse')
+    model = Model(input_img, decoded)
+    model.compile(optimizer='adam', loss='mse')
 
-    return autoencoder
+    return model
