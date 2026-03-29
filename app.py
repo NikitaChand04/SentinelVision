@@ -23,6 +23,9 @@ def extract_frames(video_path):
     cap = cv2.VideoCapture(video_path)
     frames = []
 
+    if not cap.isOpened():
+        return np.array([])
+
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -38,6 +41,9 @@ def extract_frames(video_path):
 def detect_anomaly(frames):
     if model is None:
         return "Model not trained yet"
+
+    if len(frames) == 0:
+        return "No frames found"
 
     reconstructed = model.predict(frames)
     error = np.mean(np.square(frames - reconstructed))
