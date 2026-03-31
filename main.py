@@ -1,26 +1,22 @@
 import os
-from data_loader import load_frames
-from model import build_model
+from data_loader import extract_frames
 
-# Path to training data (normal frames)
-train_folder = "dataset/Train"
+def main():
+    video_path = "sample.mp4"   # your video name
 
-# Load data
-data = load_frames(train_folder)
+    if not os.path.exists(video_path):
+        print("Video file not found!")
+        return
 
-if len(data) == 0:
-    print("❌ No training data found")
-    exit()
+    # DELETE old frames (important)
+    if os.path.exists("frames"):
+        for file in os.listdir("frames"):
+            os.remove(os.path.join("frames", file))
+    else:
+        os.makedirs("frames")
 
-print("✅ Data loaded:", len(data))
+    # Call extraction with LIMIT
+    extract_frames(video_path, output_folder="frames", max_frames=200)
 
-# Build model
-model = build_model()
-
-# Train model
-model.fit(data, data, epochs=5, batch_size=8)
-
-# Save model
-model.save("anomaly_model.h5")
-
-print("✅ Model trained and saved")
+if __name__ == "__main__":
+    main()
