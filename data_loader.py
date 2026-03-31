@@ -1,18 +1,31 @@
-import os
 import cv2
-import numpy as np
+import os
 
-def load_frames(folder):
-    data = []
+def extract_frames(video_path, output_folder="frames", max_frames=200):
+    # Create folder if not exists
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-    for file in os.listdir(folder):
-        path = os.path.join(folder, file)
+    cap = cv2.VideoCapture(video_path)
 
-        img = cv2.imread(path)
+    count = 0
 
-        if img is not None:
-            img = cv2.resize(img, (128, 128))
-            img = img / 255.0
-            data.append(img)
+    while True:
+        ret, frame = cap.read()
 
-    return np.array(data)
+        if not ret:
+            break
+
+        # Save frame
+        frame_path = os.path.join(output_folder, f"frame_{count}.jpg")
+        cv2.imwrite(frame_path, frame)
+
+        count += 1
+
+        # LIMIT frames (VERY IMPORTANT)
+        if count >= max_frames:
+            break
+
+    cap.release()
+
+    print(f"Frames extracted: {count}")
