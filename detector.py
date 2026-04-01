@@ -33,7 +33,7 @@ def extract_frames(video_path):
 
 
 def detect_anomaly(video_path):
-    model = load_model(MODEL_PATH)
+ model = load_model(MODEL_PATH, compile=False)
 
     extract_frames(video_path)
 
