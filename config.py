@@ -1,0 +1,7 @@
+UPLOAD_FOLDER = "uploads"
+FRAME_FOLDER = "frames"
+MODEL_PATH = "models/model.h5"
+
+IMG_SIZE = (64, 64)
+MAX_FRAMES = 200
+THRESHOLD_FACTOR = 2
