@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request
 import os
+
 from config import UPLOAD_FOLDER
 from processing.extractor import extract
-from processing.detector import detect
+from processing.detector import detect_anomaly
 
 app = Flask(__name__)
 
@@ -13,16 +14,14 @@ def home():
         path = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(path)
 
-        extract(path)
+        result_frames = detect_anomaly(path)
 
-        frames = detect()
-
-        if frames:
+        if result_frames:
             result = "⚠️ Anomaly Detected"
         else:
             result = "✅ No Anomaly"
 
-        return render_template("result.html", result=result, frames=frames)
+        return render_template("result.html", result=result, frames=result_frames)
 
     return render_template("index.html")
 
